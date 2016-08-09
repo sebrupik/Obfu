@@ -1,7 +1,7 @@
 package obfu;
 
 public class Item {
-    String[] swap;
+    public String[] swap;
     String type;
     
     public Item(String[] swap, String type) {

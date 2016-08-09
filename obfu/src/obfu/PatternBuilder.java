@@ -10,7 +10,7 @@ public class PatternBuilder {
                                      "fe80::\\w+:\\w+:\\w+:\\w+",
                                      "2001(?::\\w+|:){1,7}"
     };
-    String[] type = new String[]{"Layer2-MAC",
+    public static String[] type = new String[]{"Layer2-MAC",
                                  "Layer3-IPv4",
                                  "Layer3-IPv6_ll",
                                  "Layer3-IPv6_gua"
@@ -18,8 +18,6 @@ public class PatternBuilder {
     
     public PatternBuilder(String domain) {
         this.domain = domain;
-        
-        
     }
     
     public Pattern[] create() {
@@ -32,6 +30,3 @@ public class PatternBuilder {
         return p;
     }
 }
-
-
-
