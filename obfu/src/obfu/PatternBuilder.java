@@ -4,9 +4,9 @@ import java.util.regex.Pattern;
 
 public class PatternBuilder {
     String domain;
-    
-    String[] patterns = new String[]{"([a-fA-F0-9]{2}):([a-fA-F0-9]{2}):([a-fA-F0-9]{2}):([a-fA-F0-9]{2}):([a-fA-F0-9]{2}):([a-fA-F0-9]{2})",
-                                     "([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3})",
+    //([a-fA-F0-9]{2}):([a-fA-F0-9]{2}):([a-fA-F0-9]{2}):([a-fA-F0-9]{2}):([a-fA-F0-9]{2}):([a-fA-F0-9]{2})
+    String[] patterns = new String[]{"(?:(?:[a-fA-F0-9]{2}[:-]){5}[0-9A-Fa-f]{2})",
+                                     "(?:(?:[0-9]{1,3}[.]){3}[0-9]{1,3})",
                                      "fe80::\\w+:\\w+:\\w+:\\w+",
                                      "2001(?::\\w+|:){1,7}"
     };

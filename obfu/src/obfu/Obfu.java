@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class Obfu {
-    HashMap<String, ArrayList> swap;
+    HashMap<String, HashMap> swap;
     Pattern[] patterns;
     Matcher matcher;
     
@@ -29,8 +29,10 @@ public class Obfu {
     
     public Obfu(CharBuffer buff) {
         String match;
-        ArrayList arr;
+        //ArrayList arr;
         swap =  new HashMap();
+        //HashMap<String, Has
+        HashMap<String, Item> typeHM;
         patterns= new PatternBuilder("blah.com").create();
     
         for(int i=0; i<patterns.length; i++) {
@@ -39,25 +41,32 @@ public class Obfu {
             while (matcher.find()) {
                 match = matcher.group();
                 
-                arr = (swap.containsKey(PatternBuilder.type[i])) ? swap.get(PatternBuilder.type[i]) : new ArrayList();
+                typeHM = (swap.containsKey(PatternBuilder.type[i])) ? swap.get(PatternBuilder.type[i]) : new HashMap();
                 
-                arr.add(new Item(new String[]{match, ""}, PatternBuilder.type[i]));
-                swap.put(PatternBuilder.type[i], arr);
-            }
-            
-            this.displayFinds(swap);
+                if(!typeHM.containsKey(match)) {
+                    typeHM.put(match, new Item(new String[]{match, ""}, PatternBuilder.type[i]));
+                } 
+                
+                swap.put(PatternBuilder.type[i], typeHM);
+            }  
         }
-
+        this.displayFinds(swap);
     }
     
     private void displayFinds(HashMap h) {
-        ArrayList<Item> a;
+        //System.out.println("swap hash size "+h.size());
+        HashMap<String, Item> tHM;
         Iterator it = h.entrySet().iterator();
+        Iterator it2;
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
-            a = (ArrayList)pair.getValue();
-            for (Item a1 : a) {
-                System.out.println(pair.getKey() + " :: " + a1.swap[0]);
+            tHM = (HashMap)pair.getValue();
+            it2 = tHM.entrySet().iterator();
+            System.out.println(pair.getKey()+"--");
+            while(it2.hasNext()) {
+                Map.Entry pair2 = (Map.Entry)it2.next();
+                
+                System.out.println(pair2.getKey() + " :: " + ((Item)pair2.getValue()).swap[0]);
             }
         }
     }
