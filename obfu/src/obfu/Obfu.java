@@ -16,6 +16,7 @@ public class Obfu {
     HashMap<String, HashMap> swap;
     Pattern[] patterns;
     Matcher matcher;
+    int[] typeCount;
     
     public static void main(String[] args) throws FileNotFoundException, IOException {
         FileInputStream input = new FileInputStream(args[0]);
@@ -29,9 +30,8 @@ public class Obfu {
     
     public Obfu(CharBuffer buff) {
         String match;
-        //ArrayList arr;
+        typeCount = new int[PatternBuilder.type.length];
         swap =  new HashMap();
-        //HashMap<String, Has
         HashMap<String, Item> typeHM;
         patterns= new PatternBuilder("blah.com").create();
     
@@ -44,13 +44,34 @@ public class Obfu {
                 typeHM = (swap.containsKey(PatternBuilder.type[i])) ? swap.get(PatternBuilder.type[i]) : new HashMap();
                 
                 if(!typeHM.containsKey(match)) {
-                    typeHM.put(match, new Item(new String[]{match, ""}, PatternBuilder.type[i]));
+                    typeHM.put(match, new Item(new String[]{match, swap(match, i)}, PatternBuilder.type[i]));
                 } 
                 
                 swap.put(PatternBuilder.type[i], typeHM);
             }  
         }
         this.displayFinds(swap);
+    }
+    
+    private String swap(String ori, int type) {
+        typeCount[type]++;
+        String replaceStr = "";
+        
+        switch (type) {
+            case 0:    //Layer2-MAC
+                replaceStr = SwapEngine.swapMacAddress(ori, typeCount[type], 4);
+                break;
+            case 1:    //Layer3-IPv4
+                break;
+            case 2:    //Layer3-IPv6_ll
+                break;
+            case 3:    //Layer3-IPv6_gua
+                break;
+            default:
+                break;
+        }
+        
+        return replaceStr;
     }
     
     private void displayFinds(HashMap h) {
@@ -66,7 +87,7 @@ public class Obfu {
             while(it2.hasNext()) {
                 Map.Entry pair2 = (Map.Entry)it2.next();
                 
-                System.out.println(pair2.getKey() + " :: " + ((Item)pair2.getValue()).swap[0]);
+                System.out.println(pair2.getKey() + " :: " + ((Item)pair2.getValue()).swap[1]);
             }
         }
     }

@@ -44,7 +44,18 @@ public class SwapEngine {
         
     }
     
+    /**
+     * Strip the formating (:, -) from the the supplied MAC address. Replace the number of characters
+     * specified by the value of 'replace' with an X. Reformat the MAC address and return.
+     * 
+     * 
+     * @param macOri   The original MAC address
+     * @param count    A unique value to be used in the new obfuscated address
+     * @param replace    The number of leading characters in the MAC address to obfuscate
+     * @return 
+     */
     public static String swapMacAddress(String macOri, int count, int replace) {
+        System.out.println("SwapEngine/swapMacAddress - "+macOri+", "+count+", "+replace);
         String macNew = macCompress(macOri);
         
         String cStr = String.valueOf(count);
@@ -54,8 +65,11 @@ public class SwapEngine {
             prefix = prefix.concat("X");
         
         prefix = prefix.concat(cStr);
+        System.out.println("prefix "+prefix);
         
         macNew = prefix+(macNew.substring(prefix.length(), macNew.length()));
+        
+        System.out.println("macNew "+macNew);
         
         return macNew;
     }
