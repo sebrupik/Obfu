@@ -15,7 +15,7 @@ public class SwapEngine {
         
     }
     
-    public void swap() {
+    /*public void swap() {
         Iterator it = swap.entrySet().iterator();
     
         while (it.hasNext()) {
@@ -38,7 +38,7 @@ public class SwapEngine {
                 
             }
         }
-    }
+    }*/
     
     public void writeToFile() {
         
@@ -69,9 +69,23 @@ public class SwapEngine {
         
         macNew = prefix+(macNew.substring(prefix.length(), macNew.length()));
         
+        
+        macNew = addElements(macNew, ":", 2, 3, 15);
+        
         System.out.println("macNew "+macNew);
         
-        return macNew;
+        return macNew.toUpperCase();
+    }
+    
+    public String swapIPv4Address(String addressOri, int count, int replace) {
+        System.out.println("SwapEngine/swapIPv4Address - "+addressOri+", "+count+", "+replace);
+        String addressNew= removeElements(addressOri, ".");
+        
+        
+        
+        
+        return addressNew;
+        
     }
     
     private static String removeElements(String oriStr, String ele) {
@@ -82,6 +96,13 @@ public class SwapEngine {
             newStr = newStr.concat(s);
         
         return newStr;
+    }
+    
+    private static String addElements(String input, String element, int start, int space, int max) {
+        for(int i=start;i<max;i+=space) 
+            input = input.substring(0,i)+element+input.substring(i, input.length());
+        
+        return input;
     }
     
     private static String ipv6FullLength(String oriIPv6) {
