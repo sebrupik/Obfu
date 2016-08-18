@@ -57,35 +57,50 @@ public class SwapEngine {
     public static String swapMacAddress(String macOri, int count, int replace) {
         System.out.println("SwapEngine/swapMacAddress - "+macOri+", "+count+", "+replace);
         String macNew = macCompress(macOri);
+        String prefix = createPrefix(count, replace);
         
+        macNew = prefix+(macNew.substring(prefix.length(), macNew.length()));
+        macNew = addElements(macNew, ":", 2, 3, 15);
+        
+        //System.out.println("macNew "+macNew);
+        return macNew.toUpperCase();
+    }
+    
+    /**
+     * 
+     * 
+     * @param addressOri
+     * @param count
+     * @param replace         number of octets to obfuscate
+     * @return 
+     */
+    public static String swapIPv4Address(String addressOri, int count, int replace) {
+        System.out.println("SwapEngine/swapIPv4Address - "+addressOri+", "+count+", "+replace);
+        String[] sArr = addressOri.split("\\.");
+        String prefix = createPrefix(count, replace*3);
+        
+        prefix = addElements(prefix, ".", 3, 4, 8);
+        //System.out.println("prefix is :"+prefix);
+        
+        String addressNew = "";
+        for(int i=replace; i<sArr.length; i++) {
+            addressNew += sArr[i];
+            if(i != sArr.length-1)
+                addressNew += ".";
+        }
+        //System.out.println("addressNew is :"+addressNew);
+        
+        return prefix.concat(addressNew);
+    }
+    
+    private static String createPrefix(int count, int replace) {
         String cStr = String.valueOf(count);
         String prefix ="";
         
         for(int i=0; i < (replace-cStr.length()); i++)
             prefix = prefix.concat("X");
         
-        prefix = prefix.concat(cStr);
-        System.out.println("prefix "+prefix);
-        
-        macNew = prefix+(macNew.substring(prefix.length(), macNew.length()));
-        
-        
-        macNew = addElements(macNew, ":", 2, 3, 15);
-        
-        System.out.println("macNew "+macNew);
-        
-        return macNew.toUpperCase();
-    }
-    
-    public String swapIPv4Address(String addressOri, int count, int replace) {
-        System.out.println("SwapEngine/swapIPv4Address - "+addressOri+", "+count+", "+replace);
-        String addressNew= removeElements(addressOri, ".");
-        
-        
-        
-        
-        return addressNew;
-        
+        return prefix.concat(cStr);
     }
     
     private static String removeElements(String oriStr, String ele) {
