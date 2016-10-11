@@ -93,6 +93,13 @@ public class SwapEngine {
         return prefix.concat(addressNew);
     }
     
+    public static String swapIPv6LLAddress(String addressOri, int count, int replace) {
+        System.out.println("SwapEngine/swapIPv6LLAddress - "+addressOri+", "+count+", "+replace);
+        
+        
+        return addressOri+count;
+    }
+    
     private static String createPrefix(int count, int replace) {
         String cStr = String.valueOf(count);
         String prefix ="";

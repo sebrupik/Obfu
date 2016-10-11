@@ -5,9 +5,9 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -47,22 +47,19 @@ public class Obfu {
                     swapStr = swap(match, i);
                     typeHM.put(match, new Item(new String[]{match, swapStr}, PatternBuilder.type[i]));
                     
-                    //Matcher m = Pattern.compile(match).matcher(buff);
-                    //m.replaceAll(swapStr);
-                    (Pattern.compile(match).matcher(buff)).replaceAll(swapStr);                    
+                    try {
+                        buff = Charset.forName("8859_1").newDecoder().decode( ByteBuffer.wrap(((Pattern.compile(match).matcher(buff)).replaceAll(swapStr)).getBytes()) );
+                    } catch(CharacterCodingException cce) { System.out.println("Obfu/Obfu(main) - "+cce); }
                 } 
                 
                 swapHM.put(PatternBuilder.type[i], typeHM);
             }  
         }
-        System.out.println(this.displayFinds(swapHM));
         
-        System.out.println(buff.toString());
         try {
-            outputResult(buff, filename+"-modified");
+            outputResult(buff, swapHM, filename+"-modified");
         } catch(FileNotFoundException fnfe) {
             System.out.println("FNFE "+fnfe);
-                
         } catch(IOException ioe) {
             System.out.println("IOE "+ioe);
         }
@@ -80,6 +77,7 @@ public class Obfu {
                 replaceStr = SwapEngine.swapIPv4Address(ori, typeCount[type], 2);
                 break;
             case 2:    //Layer3-IPv6_ll
+                replaceStr = SwapEngine.swapIPv6LLAddress(ori, typeCount[type], 2);
                 break;
             case 3:    //Layer3-IPv6_gua
                 break;
@@ -91,7 +89,6 @@ public class Obfu {
     }
     
     private String displayFinds(HashMap h) {
-        //System.out.println("swap hash size "+h.size());
         String output="";
         
         HashMap<String, Item> tHM;
@@ -101,25 +98,23 @@ public class Obfu {
             Map.Entry pair = (Map.Entry)it.next();
             tHM = (HashMap)pair.getValue();
             it2 = tHM.entrySet().iterator();
-            //System.out.println(pair.getKey()+"--");
             output += String.format(pair.getKey()+"-- %n");
             while(it2.hasNext()) {
                 Map.Entry pair2 = (Map.Entry)it2.next();
                 
-                //System.out.println(pair2.getKey() + " :: " + ((Item)pair2.getValue()).swap[1]);
                 output += String.format(pair2.getKey() + " :: " + ((Item)pair2.getValue()).swap[1]+"%n");
             }
         }
         return output;
     }
     
-    private void outputResult(CharBuffer cBuff, String filename) throws FileNotFoundException, IOException {
-        FileChannel fc = new FileOutputStream(filename).getChannel();
-        ByteBuffer bBuff = ByteBuffer.allocate(2400000);
-        
-        bBuff.asCharBuffer().put(cBuff);
-        fc.write(bBuff);
-        fc.close();
+    private void outputResult(CharBuffer cBuff, HashMap h, String filename) throws FileNotFoundException, IOException {
+        try(PrintWriter out = new PrintWriter(filename)) {
+            out.println( cBuff.toString() );
+        }
+        try(PrintWriter out = new PrintWriter(filename+"-swaps")) {
+            out.println( this.displayFinds(h) );
+        }
     }
     
 }
