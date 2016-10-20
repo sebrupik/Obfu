@@ -18,22 +18,31 @@ public class Obfu {
     Matcher matcher;
     int[] typeCount;
     
+    private final static String _ip6np = "IPv6_network_prifix";
+    
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        FileInputStream input = new FileInputStream(args[0]);
+        FileInputStream input = new FileInputStream(args[1]);
         FileChannel channel = input.getChannel();
         
         ByteBuffer bbuf = channel.map(FileChannel.MapMode.READ_ONLY, 0, (int)channel.size());
         CharBuffer cbuf = Charset.forName("8859_1").newDecoder().decode(bbuf);
         
-        new Obfu(cbuf, args[0]);
+        if(args.length!=2) {
+            System.out.println("Unexpected arguments. Require <domain> <input_file>");
+            System.exit(0);
+        } else {
+            new Obfu(cbuf, args[0], args[1]);
+        }
     }
     
-    public Obfu(CharBuffer buff, String filename) {
+    public Obfu(CharBuffer buff, String domain, String filename) {
         String match, swapStr;
         typeCount = new int[PatternBuilder.type.length];
         swapHM =  new HashMap();
         HashMap<String, Item> typeHM;
-        patterns= new PatternBuilder("blah.com").create();
+        patterns= new PatternBuilder(domain).create();
+        
+        swapHM.put(_ip6np, new HashMap<>());
     
         for(int i=0; i<patterns.length; i++) {
             matcher = patterns[i].matcher(buff);
@@ -80,6 +89,7 @@ public class Obfu {
                 replaceStr = SwapEngine.swapIPv6LLAddress(ori, typeCount[type], 2);
                 break;
             case 3:    //Layer3-IPv6_gua
+                replaceStr = SwapEngine.swapIPv6GUAddress(ori, typeCount[type], 2, swapHM.get(_ip6np));
                 break;
             default:
                 break;

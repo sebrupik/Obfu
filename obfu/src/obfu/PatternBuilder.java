@@ -8,16 +8,20 @@ public class PatternBuilder {
     String[] patterns = new String[]{"(?:(?:[a-fA-F0-9]{2}[:-]){5}[0-9A-Fa-f]{2})",
                                      "(?:(?:[0-9]{1,3}[.]){3}[0-9]{1,3})",
                                      "fe80::\\w+:\\w+:\\w+:\\w+",
-                                     "2001(?::\\w+|:){1,7}"
+                                     "2001(?::\\w+|:){1,7}",
+                                     ""
     };
     public static String[] type = new String[]{"Layer2-MAC",
                                  "Layer3-IPv4",
                                  "Layer3-IPv6_ll",
-                                 "Layer3-IPv6_gua"
+                                 "Layer3-IPv6_gua",
+                                 "domain"
     };
     
     public PatternBuilder(String domain) {
         this.domain = domain;
+        
+        patterns[patterns.length-1] = domain;
     }
     
     public Pattern[] create() {

@@ -100,6 +100,13 @@ public class SwapEngine {
         return addressOri+count;
     }
     
+    public static String swapIPv6GUAddress(String addressOri, int count, int replace, HashMap ip6np) {
+        System.out.println("SwapEngine/swapIPv6GUAddress - "+addressOri+", "+count+", "+replace);
+        
+        
+        return addressOri+count;
+    }
+    
     private static String createPrefix(int count, int replace) {
         String cStr = String.valueOf(count);
         String prefix ="";
