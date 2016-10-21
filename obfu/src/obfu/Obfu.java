@@ -126,5 +126,4 @@ public class Obfu {
             out.println( this.displayFinds(h) );
         }
     }
-    
 }
