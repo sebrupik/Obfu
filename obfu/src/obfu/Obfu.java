@@ -18,7 +18,7 @@ public class Obfu {
     Matcher matcher;
     int[] typeCount;
     
-    private final static String _ip6np = "IPv6_network_prifix";
+    public final static String _ip6np = "IPv6_network_prifix";
     
     public static void main(String[] args) throws FileNotFoundException, IOException {
         FileInputStream input = new FileInputStream(args[1]);

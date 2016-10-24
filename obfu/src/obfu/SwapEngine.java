@@ -103,8 +103,29 @@ public class SwapEngine {
     public static String swapIPv6GUAddress(String addressOri, int count, int replace, HashMap ip6np) {
         System.out.println("SwapEngine/swapIPv6GUAddress - "+addressOri+", "+count+", "+replace);
         
+        String addressExt = ipv6FullLength(addressOri);
+        String[] addressParts = new String[]{addressExt.substring(0,20), addressExt.substring(21,addressExt.length())};
+        
+        if(!ip6np.containsKey(addressParts[0])) {
+            ip6np.put(addressParts[0], new Item(new String[]{addressParts[0], intToHexPrefix(addressParts[0].substring(0,addressParts[0].indexOf(":")), ip6np.size())}, Obfu._ip6np));
+        }
+        
         
         return addressOri+count;
+    }
+    
+    /**
+     * Take an int, convert to hex, incrementing the address group to the left each time 
+     * the value of FFFF is reached, then returning to 0000 to begin incrementing again.
+     * 
+     * @param prefix  The network prefix from which will be reused in the returned value
+     * @param count
+     * @return 
+     */
+    private static String intToHexPrefix(String prefix, int count) {
+        
+        
+        return prefix;
     }
     
     private static String createPrefix(int count, int replace) {
