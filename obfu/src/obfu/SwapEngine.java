@@ -7,6 +7,8 @@ public class SwapEngine {
     HashMap<String, Item> tmpHM;
     int[] count;
     
+    private static final int max_chunk = 65535;
+    
     public SwapEngine(HashMap<String, HashMap> swap) {
         this.swap = swap;
         this.count = new int[PatternBuilder.type.length];
@@ -92,9 +94,45 @@ public class SwapEngine {
      * @return 
      */
     private static String intToHexPrefix(String prefix, int count) {
+        String[] output = new String[3];
+        String newStr = Integer.toHexString(count);
+        
+        int val =0;
+        int remainder= 0;
         
         
-        return prefix;
+        for(int i=3; i<=0; i--) {
+            if(val ==0)
+                break;
+            
+            val = count / max_chunk;
+            remainder = count % max_chunk;
+            
+            if(val <= max_chunk) {
+                output[i] = Integer.toHexString(val);
+            } else {
+                output[i] = Integer.toHexString(remainder);
+                count = val;
+            }
+        }
+        
+        
+        return "2001:"+output[0]+":"+output[1]+":"+output[2];
+    }
+    
+    private static String[] recursive(String[] input, int index, int count) {
+        int val = count / max_chunk;
+        int remainder = count % max_chunk;
+        
+        if(val <= max_chunk) {
+            input[index] = Integer.toHexString(val);
+        } else {
+            input[index] = Integer.toHexString(remainder);
+            
+            //this.recursive(input, index--, val); 
+        }
+        
+        return input;
     }
     
     private static String createPrefix(int count, int replace) {
@@ -158,6 +196,8 @@ public class SwapEngine {
             elements = oriMAC.split("\\.");
         } else if(oriMAC.contains(":")) {  //linux
              elements = oriMAC.split(":");
+        } else if(oriMAC.contains("-")) {  //linux
+             elements = oriMAC.split("-");
         }
         if(elements!=null) {
             for(String element : elements) 
