@@ -104,15 +104,15 @@ public class SwapEngineTest {
     @Test
     public void testSwapIPv6GUAddress() {
         System.out.println("swapIPv6GUAddress");
-        String addressOri = "";
-        int count = 0;
+        String addressOri = "2001:630:d0:aaaa::1";
+        int count = 1;
         int replace = 0;
-        HashMap ip6np = null;
-        String expResult = "";
+        HashMap ip6np = new HashMap();
+        String expResult = "2001:0000:0000:0001:0000:0000:0000:0001";
         String result = SwapEngine.swapIPv6GUAddress(addressOri, count, replace, ip6np);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
     
 }

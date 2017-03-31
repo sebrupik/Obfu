@@ -7,7 +7,7 @@ public class SwapEngine {
     HashMap<String, Item> tmpHM;
     int[] count;
     
-    private static final int max_chunk = 65535;
+    //private static final int max_chunk = 65535;
     
     public SwapEngine(HashMap<String, HashMap> swap) {
         this.swap = swap;
@@ -78,11 +78,10 @@ public class SwapEngine {
         String[] addressParts = new String[]{addressExt.substring(0,20), addressExt.substring(21,addressExt.length())};
         
         if(!ip6np.containsKey(addressParts[0])) {
-            ip6np.put(addressParts[0], new Item(new String[]{addressParts[0], intToHexPrefix(addressParts[0].substring(0,addressParts[0].indexOf(":")), ip6np.size())}, Obfu._ip6np));
+            ip6np.put(addressParts[0], new Item(new String[]{addressParts[0], intToHexPrefix(addressParts[0].substring(0,addressParts[0].indexOf(":")), true, ip6np.size()+1)}, Obfu._ip6np));
         }
         
-        
-        return addressOri+count;
+        return ipv6FullLength(((Item)ip6np.get(addressParts[0])).swap[1]+":"+intToHexPrefix(null, false, count));
     }
     
     /**
@@ -93,46 +92,35 @@ public class SwapEngine {
      * @param count
      * @return 
      */
-    private static String intToHexPrefix(String prefix, int count) {
-        String[] output = new String[3];
-        String newStr = Integer.toHexString(count);
+    private static String intToHexPrefix(String prefixStr, boolean prefix, int count) {
+        String[] output;
+        String returnStr = "";
+        String binaryStr = Integer.toBinaryString(count);
         
-        int val =0;
-        int remainder= 0;
-        
-        
-        for(int i=3; i<=0; i--) {
-            if(val ==0)
-                break;
-            
-            val = count / max_chunk;
-            remainder = count % max_chunk;
-            
-            if(val <= max_chunk) {
-                output[i] = Integer.toHexString(val);
-            } else {
-                output[i] = Integer.toHexString(remainder);
-                count = val;
-            }
-        }
-        
-        
-        return "2001:"+output[0]+":"+output[1]+":"+output[2];
-    }
-    
-    private static String[] recursive(String[] input, int index, int count) {
-        int val = count / max_chunk;
-        int remainder = count % max_chunk;
-        
-        if(val <= max_chunk) {
-            input[index] = Integer.toHexString(val);
+        if(prefix) {
+            output = new String[]{"0","0","0"};
         } else {
-            input[index] = Integer.toHexString(remainder);
-            
-            //this.recursive(input, index--, val); 
+            output = new String[]{"0","0","0","0"};
+        }
+
+        if(prefix)
+            binaryStr = String.format("%48s", binaryStr).replace(' ', '0');
+        else
+            binaryStr = String.format("%64s", binaryStr).replace(' ', '0');
+
+        
+        //System.out.println("PADDED?? : "+binaryStr);
+        
+        for(int i=0; i<output.length; i++) {
+            output[i] = Integer.toString(Integer.parseInt(binaryStr.substring(0+(16*i),16+(16*i)), 2), 16);
         }
         
-        return input;
+        if(prefix)
+            returnStr = prefixStr+":"+output[0]+":"+output[1]+":"+output[2];
+        else
+            returnStr = output[0]+":"+output[1]+":"+output[2]+":"+output[3];
+        
+        return returnStr;
     }
     
     private static String createPrefix(int count, int replace) {
