@@ -7,8 +7,6 @@ public class SwapEngine {
     HashMap<String, Item> tmpHM;
     int[] count;
     
-    //private static final int max_chunk = 65535;
-    
     public SwapEngine(HashMap<String, HashMap> swap) {
         this.swap = swap;
         this.count = new int[PatternBuilder.type.length];
@@ -33,7 +31,6 @@ public class SwapEngine {
         macNew = prefix+(macNew.substring(prefix.length(), macNew.length()));
         macNew = addElements(macNew, ":", 2, 3, 15);
         
-        //System.out.println("macNew "+macNew);
         return macNew.toUpperCase();
     }
     
@@ -51,7 +48,6 @@ public class SwapEngine {
         String prefix = createPrefix(count, replace*3);
         
         prefix = addElements(prefix, ".", 3, 4, 8);
-        //System.out.println("prefix is :"+prefix);
         
         String addressNew = "";
         for(int i=replace; i<sArr.length; i++) {
@@ -59,29 +55,35 @@ public class SwapEngine {
             if(i != sArr.length-1)
                 addressNew += ".";
         }
-        //System.out.println("addressNew is :"+addressNew);
         
         return prefix.concat(addressNew);
     }
     
-    public static String swapIPv6LLAddress(String addressOri, int count, int replace) {
+    /*public static String swapIPv6LLAddress(String addressOri, int count, int replace) {
         System.out.println("SwapEngine/swapIPv6LLAddress - "+addressOri+", "+count+", "+replace);
-        
-        
-        return addressOri+count;
-    }
-    
-    public static String swapIPv6GUAddress(String addressOri, int count, int replace, HashMap ip6np) {
-        System.out.println("SwapEngine/swapIPv6GUAddress - "+addressOri+", "+count+", "+replace);
         
         String addressExt = ipv6FullLength(addressOri);
         String[] addressParts = new String[]{addressExt.substring(0,20), addressExt.substring(21,addressExt.length())};
+                
+        return ipv6FullLength(addressParts[0]+intToHexPrefix(null, false, count));
+    }*/
+    
+    public static String swapIPv6Address(String addressOri, int count, int replace, HashMap ip6np) {
+        System.out.println("SwapEngine/swapIPv6GUAddress - "+addressOri+", "+count+", "+replace);
+        String output;
+        String addressExt = ipv6FullLength(addressOri);
+        String[] addressParts = new String[]{addressExt.substring(0,20), addressExt.substring(21,addressExt.length())};
         
-        if(!ip6np.containsKey(addressParts[0])) {
-            ip6np.put(addressParts[0], new Item(new String[]{addressParts[0], intToHexPrefix(addressParts[0].substring(0,addressParts[0].indexOf(":")), true, ip6np.size()+1)}, Obfu._ip6np));
+        if(ip6np != null) {
+            if(!ip6np.containsKey(addressParts[0])) {
+                ip6np.put(addressParts[0], new Item(new String[]{addressParts[0], intToHexPrefix(addressParts[0].substring(0,addressParts[0].indexOf(":")), true, ip6np.size()+1)}, Obfu._ip6np));
+            }
+            output = ipv6FullLength(((Item)ip6np.get(addressParts[0])).swap[1]+":"+intToHexPrefix(null, false, count));
+        } else {
+            output = ipv6FullLength(addressParts[0]+intToHexPrefix(null, false, count));
         }
         
-        return ipv6FullLength(((Item)ip6np.get(addressParts[0])).swap[1]+":"+intToHexPrefix(null, false, count));
+        return output;
     }
     
     /**
@@ -96,21 +98,16 @@ public class SwapEngine {
         String[] output;
         String returnStr = "";
         String binaryStr = Integer.toBinaryString(count);
-        
+       
         if(prefix) {
             output = new String[]{"0","0","0"};
+            binaryStr = String.format("%48s", binaryStr).replace(' ', '0');
         } else {
             output = new String[]{"0","0","0","0"};
-        }
-
-        if(prefix)
-            binaryStr = String.format("%48s", binaryStr).replace(' ', '0');
-        else
             binaryStr = String.format("%64s", binaryStr).replace(' ', '0');
-
+        }
         
-        //System.out.println("PADDED?? : "+binaryStr);
-        
+        //Convert each byte into hex
         for(int i=0; i<output.length; i++) {
             output[i] = Integer.toString(Integer.parseInt(binaryStr.substring(0+(16*i),16+(16*i)), 2), 16);
         }

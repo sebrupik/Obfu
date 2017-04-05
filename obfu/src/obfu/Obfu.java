@@ -86,10 +86,10 @@ public class Obfu {
                 replaceStr = SwapEngine.swapIPv4Address(ori, typeCount[type], 2);
                 break;
             case 2:    //Layer3-IPv6_ll
-                replaceStr = SwapEngine.swapIPv6LLAddress(ori, typeCount[type], 2);
+                replaceStr = SwapEngine.swapIPv6Address(ori, typeCount[type], 2, null);
                 break;
             case 3:    //Layer3-IPv6_gua
-                replaceStr = SwapEngine.swapIPv6GUAddress(ori, typeCount[type], 2, swapHM.get(_ip6np));
+                replaceStr = SwapEngine.swapIPv6Address(ori, typeCount[type], 2, swapHM.get(_ip6np));
                 break;
             default:
                 break;

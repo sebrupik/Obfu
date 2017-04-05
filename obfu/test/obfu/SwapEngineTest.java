@@ -85,32 +85,34 @@ public class SwapEngineTest {
     /**
      * Test of swapIPv6LLAddress method, of class SwapEngine.
      */
-    @Test
+    /*@Test
     public void testSwapIPv6LLAddress() {
         System.out.println("swapIPv6LLAddress");
-        String addressOri = "";
-        int count = 0;
+        String addressOri = "fe80::a11:96ff:fe07:a22c";
+        int count = 1;
         int replace = 0;
-        String expResult = "";
-        String result = SwapEngine.swapIPv6LLAddress(addressOri, count, replace);
+        String expResult = "fe80:0000:0000:0000:0000:0000:0000:0001";
+        String result = SwapEngine.swapIPv6Address(addressOri, count, replace, null);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
-    }
+    }*/
 
     /**
      * Test of swapIPv6GUAddress method, of class SwapEngine.
      */
     @Test
     public void testSwapIPv6GUAddress() {
-        System.out.println("swapIPv6GUAddress");
-        String addressOri = "2001:630:d0:aaaa::1";
+        System.out.println("swapIPv6Address");
+        String[] addressOri = new String[]{"2001:630:d0:aaaa::1", "fe80::a11:96ff:fe07:a22c"};
         int count = 1;
         int replace = 0;
         HashMap ip6np = new HashMap();
-        String expResult = "2001:0000:0000:0001:0000:0000:0000:0001";
-        String result = SwapEngine.swapIPv6GUAddress(addressOri, count, replace, ip6np);
-        assertEquals(expResult, result);
+        String[] expResult = new String[]{"2001:0000:0000:0001:0000:0000:0000:0001", "fe80:0000:0000:0000:0000:0000:0000:0001"};
+        String result = SwapEngine.swapIPv6Address(addressOri[0], count, replace, ip6np);
+        assertEquals(expResult[0], result);
+        result = SwapEngine.swapIPv6Address(addressOri[1], count, replace, null);
+        assertEquals(expResult[1], result);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
