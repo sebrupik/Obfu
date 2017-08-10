@@ -68,7 +68,7 @@ public class SwapEngine {
         return ipv6FullLength(addressParts[0]+intToHexPrefix(null, false, count));
     }*/
     
-    public static String swapIPv6Address(String addressOri, int count, int replace, HashMap ip6np) {
+    public static String swapIPv6Address(String addressOri, int count, int replace, HashMap<String, Item> ip6np) {
         System.out.println("SwapEngine/swapIPv6GUAddress - "+addressOri+", "+count+", "+replace);
         String output;
         String addressExt = ipv6FullLength(addressOri);

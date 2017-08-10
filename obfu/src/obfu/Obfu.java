@@ -38,7 +38,7 @@ public class Obfu {
     public Obfu(CharBuffer buff, String domain, String filename) {
         String match, swapStr;
         typeCount = new int[PatternBuilder.type.length];
-        swapHM =  new HashMap();
+        swapHM = new HashMap<>();
         HashMap<String, Item> typeHM;
         patterns= new PatternBuilder(domain).create();
         
@@ -50,7 +50,7 @@ public class Obfu {
             while (matcher.find()) {
                 match = matcher.group();
                 
-                typeHM = (swapHM.containsKey(PatternBuilder.type[i])) ? swapHM.get(PatternBuilder.type[i]) : new HashMap();
+                typeHM = (swapHM.containsKey(PatternBuilder.type[i])) ? swapHM.get(PatternBuilder.type[i]) : new HashMap<>();
                 
                 if(!typeHM.containsKey(match)) {
                     swapStr = swap(match, i);
